@@ -8,6 +8,7 @@ from gidgethub import aiohttp as gh_aiohttp
 routes = web.RouteTableDef()
 router = routing.Router()
 
+
 @router.register("issues", action="opened")
 async def issue_opened_event(event, gh, *args, **kwargs):
     """ Whenever an issue is opened, greet the author and say thanks."""
@@ -17,23 +18,25 @@ async def issue_opened_event(event, gh, *args, **kwargs):
     message = f"Thanks for the report @{author}! I will look into it ASAP! (I'm a bot)."
     await gh.post(url, data={"body": message})
 
-
+# Should be able to alter the path here for unique endpoints per repo
+# Probably best to organize each repo in its own py file
 @routes.post("/")
 async def main(request):
     # read the GitHub webhook payload
     body = await request.read()
 
     # our authentication token and secret
-    secret = os.environ.get("GH_SECRET")
+    secret = os.environ.get("GH_SECRET")  # Will need unique gh secrets here for each repo
     oauth_token = os.environ.get("GH_AUTH")
 
     # a representation of GitHub webhook event
-    event = sansio.Event.from_http(request.headers, body, secret=secret)
+    event = sansio.Event.from_http(request.headers, body, secret=secret) # Will need a unique secret here per repo
 
-    # instead of mariatta, use your own username
+    # create the client context so we get a release on the session and then 
+    # grab then listen on the session for posts from the webhook
     async with aiohttp.ClientSession() as session:
-        gh = gh_aiohttp.GitHubAPI(session, "jlaura",
-                                  oauth_token=oauth_token)
+        gh = gh_aiohttp.GitHubAPI(session, "ascbot",
+                                  oauth_token=oauth_token) 
 
         # call the appropriate callback for the event
         await router.dispatch(event, gh)
