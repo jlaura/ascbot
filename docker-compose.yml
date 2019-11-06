@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  ascbot:
+    image: ascbot:latest
+    ports:
+      - "8080"
+    secrets:
+      - GH_AUTH
+      - GH_SECRET
+secrets:
+  GH_AUTH:
+    file: GH_AUTH
+  GH_SECRET:
+    file: GH_SECRET

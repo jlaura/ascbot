@@ -5,6 +5,8 @@ from aiohttp import web
 from gidgethub import routing, sansio
 from gidgethub import aiohttp as gh_aiohttp
 
+from utils import get_secret
+
 routes = web.RouteTableDef()
 router = routing.Router()
 
@@ -26,11 +28,11 @@ async def main(request):
     body = await request.read()
 
     # our authentication token and secret
-    secret = os.environ.get("GH_SECRET")  # Will need unique gh secrets here for each repo
-    oauth_token = os.environ.get("GH_AUTH")
+    gh_secret = get_secret("GH_SECRET")  # Will need unique gh secrets here for each repo
+    oauth_token = get_secret("GH_AUTH")
 
     # a representation of GitHub webhook event
-    event = sansio.Event.from_http(request.headers, body, secret=secret) # Will need a unique secret here per repo
+    event = sansio.Event.from_http(request.headers, body, secret=gh_secret) # Will need a unique secret here per repo
 
     # create the client context so we get a release on the session and then 
     # grab then listen on the session for posts from the webhook
