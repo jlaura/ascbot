@@ -5,7 +5,7 @@ from aiohttp import web
 from gidgethub import routing, sansio
 from gidgethub import aiohttp as gh_aiohttp
 
-from utils import get_secret
+from .utils import get_secret
 
 routes = web.RouteTableDef()
 router = routing.Router()

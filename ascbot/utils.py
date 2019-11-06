@@ -1,6 +1,6 @@
 def get_secret(secret_name):
     try:
-        with open(f'/run/secrets/{secret_name)}', 'r') as secret_file:
+        with open(f'/run/secrets/{secret_name}', 'r') as secret_file:
             return secret_file.read()
-        except IOError:
-            return None
+    except IOError:
+        return None
