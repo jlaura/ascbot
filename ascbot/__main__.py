@@ -17,22 +17,23 @@ async def issue_opened_event(event, gh, *args, **kwargs):
     # get the URL from the event
     url = event.data["issue"]["comments_url"]
     author = event.data["issue"]["user"]["login"]
-    message = f"Thanks for the report @{author}! I will look into it ASAP! (I'm a bot)."
-    await gh.post(url, data={"body": message})
+    repo = event.data["repository"]["name"]
 
-# Should be able to alter the path here for unique endpoints per repo
-# Probably best to organize each repo in its own py file
+    if repo == 'bottest':
+        message = f"Thanks for the report @{author}! I will look into it ASAP! (I'm a bot)."
+        await gh.post(url, data={"body": message})
+
 @routes.post("/")
 async def main(request):
     # read the GitHub webhook payload
     body = await request.read()
 
     # our authentication token and secret
-    gh_secret = get_secret("GH_SECRET")  # Will need unique gh secrets here for each repo
+    gh_secret = get_secret("GH_SECRET") 
     oauth_token = get_secret("GH_AUTH")
 
     # a representation of GitHub webhook event
-    event = sansio.Event.from_http(request.headers, body, secret=gh_secret) # Will need a unique secret here per repo
+    event = sansio.Event.from_http(request.headers, body, secret=gh_secret)
 
     # create the client context so we get a release on the session and then 
     # grab then listen on the session for posts from the webhook
