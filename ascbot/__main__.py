@@ -10,7 +10,6 @@ from .utils import get_secret
 routes = web.RouteTableDef()
 router = routing.Router()
 
-
 @router.register("issues", action="opened")
 async def issue_opened_event(event, gh, *args, **kwargs):
     """ Whenever an issue is opened, greet the author and say thanks."""
@@ -30,8 +29,9 @@ async def main(request):
 
     # our authentication token and secret
     gh_secret = get_secret("GH_SECRET") 
+    print('Secret', gh_secret)
     oauth_token = get_secret("GH_AUTH")
-
+    print('Auth', oauth_token)
     # a representation of GitHub webhook event
     event = sansio.Event.from_http(request.headers, body, secret=gh_secret)
 
