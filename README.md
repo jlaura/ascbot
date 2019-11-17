@@ -14,3 +14,6 @@ The following environment variables need to be set in order for this bot to oper
 
 ## Debugging
 The bot is running inside a docker container in a docker swarm, so you can use standard docker debugging techniques to get into the container and see what is going on. A nice enhancement might be a persistent, external to the container log file to avoid having to ever access the container.
+
+## Tests
+Tests are written using PyTest. To run the tests, we suggest first creating an environment using requirements-dev.txt. Then execute `pytest ascbot` from the repository root directory.
